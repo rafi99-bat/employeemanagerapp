@@ -1,229 +1,26 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-   <a class="navbar-brand" style="color:white;">Employee Manager</a>
-   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="showNavbar">
+  <div class="container-fluid">
+    <a class="navbar-brand text-white">Employee Manager</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02"
       aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
-   </button>
-   <div class="collapse navbar-collapse" id="navbarColor02">
-      <ul class="navbar-nav mr-auto">
-         <li class="nav-item active">
-            <a class="nav-link" (click)="onOpenModal({name: '', email: '', jobTitle: '', phone: '', imageUrl: ''}, 'add')">Add Employee <span
-                  class="sr-only">(current)</span></a>
-         </li>
+    </button>
+
+    <div class="collapse navbar-collapse push-right-lg" id="navbarColor02" *ngIf="auth.isLoggedIn()">
+      <ul class="navbar-nav d-flex">
+        <li class="nav-item me-2">
+          <input type="text" class="form-control form-control-sm" placeholder="Search employees..."
+                 [(ngModel)]="searchTerm" (input)="onSearchChange()" style="width:200px;">
+        </li>
+        <li class="nav-item">
+          <button class="btn btn-outline-light btn-sm" (click)="auth.logout()">Logout</button>
+        </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
-         <input type="search" (ngModelChange)="searchEmployees(key.value)" #key="ngModel" ngModel name="key"
-            id="searchName" class="form-control mr-sm-2" placeholder="Search employees..." required>
-      </form>
-   </div>
+    </div>
+  </div>
 </nav>
-<div class="container" id="main-container">
-   <div class="row">
-      <div *ngFor="let employee of employees" class="col-md-6 col-xl-3">
-         <div class="card m-b-30">
-            <div class="card-body row">
-               <div class="col-6">
-                  <a href=""><img src="{{employee?.imageUrl}}" alt="" class="img-fluid rounded-circle w-60"></a>
-               </div>
-               <div class="col-6 card-title align-self-center mb-0">
-                  <h5>{{employee?.name}}</h5>
-                  <p class="m-0">{{employee?.jobTitle}}</p>
-               </div>
-            </div>
-            <ul class="list-group list-group-flush">
-               <li class="list-group-item"><i class="fa fa-envelope float-right"></i>{{employee?.email}}</li>
-               <li class="list-group-item"><i class="fa fa-phone float-right"></i>Phone : {{employee?.phone}}</li>
-            </ul>
-            <div class="card-body">
-               <div class="float-right btn-group btn-group-sm">
-                  <a (click)="onOpenModal(employee, 'edit')" class="btn btn-primary tooltips" data-placement="top"
-                     data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
-                  <a (click)="onOpenModal(employee, 'delete')" class="btn btn-secondary tooltips" data-placement="top"
-                     data-original-title="Delete"><i class="fa fa-times"></i></a>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
 
-   <!-- Add Employee Modal -->
-   <div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="addEmployeeModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-         <div class="modal-content">
-            <div class="modal-header">
-               <h5 class="modal-title" id="addEmployeeModalLabel">Add Employee</h5> <button type="button" class="close"
-                  data-dismiss="modal" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
-            </div>
-            <div class="modal-body">
-               <form #addForm="ngForm" (ngSubmit)="onAddEmloyee(addForm)">
-                  <div class="form-group">
-                     <label for="name">Name</label>
-                     <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required
-                        pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+">
-                  </div>
-
-                  <div class="form-group">
-                     <label for="email">Email Address</label>
-                     <input type="email" ngModel name="email" class="form-control" id="email" placeholder="Email"
-                        required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" #email="ngModel">
-                     <div *ngIf="email.invalid && email.touched" class="text-danger">
-                        <small *ngIf="email.errors?.['pattern']">
-                           Please enter a valid email (e.g., <i>name1234@example.com</i>).
-                        </small>
-                     </div>
-                  </div>
-
-                  <div class="form-group">
-                     <label for="jobTitle">Job title</label>
-                     <input type="text" ngModel name="jobTitle" class="form-control" id="jobTitle"
-                        placeholder="Job title" required pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+">
-                  </div>
-
-                  <div class="form-group">
-                     <label for="phone">Phone</label>
-                     <input type="text" ngModel name="phone" class="form-control" id="phone" placeholder="Phone"
-                        required pattern="^01[0-9]{9}$" #phone="ngModel">
-                     <div *ngIf="phone.invalid && phone.touched" class="text-danger">
-                        <small *ngIf="phone.errors?.['pattern']">
-                           Phone number must start with 01 and contain exactly 11 digits.
-                        </small>
-                     </div>
-                  </div>
-
-                  <div class="form-group">
-                     <label for="imageUrl">Image URL</label>
-                     <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl"
-                        placeholder="Image URL" required pattern="^[^\s]+$" #imageUrl="ngModel">
-                     <div *ngIf="imageUrl.invalid && imageUrl.touched" class="text-danger">
-                        <small *ngIf="imageUrl.errors?.['pattern']">
-                           Image URL cannot contain spaces.
-                        </small>
-                     </div>
-                  </div>
-                  <div class="modal-footer"> <button type="button" id="add-employee-form"
-                        class="btn btn-secondary close-btn" data-dismiss="modal">Close</button> <button
-                        [disabled]="addForm.invalid" type="submit" class="btn btn-primary save-btn">Save
-                        changes</button> </div>
-               </form>
-            </div>
-         </div>
-      </div>
-   </div>
-
-   <div class="modal fade" id="updateEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeEditModalLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-         <div class="modal-content">
-            <div class="modal-header">
-               <h5 class="modal-title" id="updateEmployeeModalLabel">
-                  Edit Employee {{editEmployee?.name}}
-               </h5>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-               </button>
-            </div>
-            <div class="modal-body">
-               <form #editForm="ngForm">
-                  <div class="form-group">
-                     <label for="name">Name</label>
-                     <input type="text" [(ngModel)]="editEmployee.name" name="name" class="form-control" id="name"
-                        placeholder="Name" required pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+" #name="ngModel">
-                     <div *ngIf="name.invalid && name.touched" class="text-danger">
-                        <small *ngIf="name.errors?.['pattern']">Name cannot start with space, contain only spaces, or
-                           have multiple consecutive spaces.</small>
-                     </div>
-                  </div>
-
-                  <input type="hidden" [(ngModel)]="editEmployee.id" name="id" id="id">
-                  <input type="hidden" [(ngModel)]="editEmployee.employeeCode" name="userCode" id="userCode">
-
-                  <div class="form-group">
-                     <label for="email">Email Address</label>
-                     <input type="email" [(ngModel)]="editEmployee.email" name="email" class="form-control" id="email"
-                        placeholder="Email" required pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                        #email="ngModel">
-                     <div *ngIf="email.invalid && email.touched" class="text-danger">
-                        <small *ngIf="email.errors?.['pattern']">
-                           Please enter a valid email (e.g., <i>name1234@example.com</i>).
-                        </small>
-                     </div>
-                  </div>
-
-                  <div class="form-group">
-                     <label for="jobTitle">Job title</label>
-                     <input type="text" [(ngModel)]="editEmployee.jobTitle" name="jobTitle" class="form-control"
-                        id="jobTitle" placeholder="Job title" required pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+"
-                        #jobTitle="ngModel">
-                     <div *ngIf="jobTitle.invalid && jobTitle.touched" class="text-danger">
-                        <small *ngIf="jobTitle.errors?.['pattern']">Job Title cannot start with space, contain only
-                           spaces, or have multiple consecutive spaces.</small>
-                     </div>
-                  </div>
-
-                  <div class="form-group">
-                     <label for="phone">Phone</label>
-                     <input type="text" [(ngModel)]="editEmployee.phone" name="phone" class="form-control" id="phone"
-                        placeholder="Phone" required pattern="^01[0-9]{9}$" #phone="ngModel">
-                     <div *ngIf="phone.invalid && phone.touched" class="text-danger">
-                        <small *ngIf="phone.errors?.['pattern']">
-                           Phone number must start with 01 and contain exactly 11 digits.
-                        </small>
-                     </div>
-                  </div>
-
-                  <div class="form-group">
-                     <label for="imageUrl">Image URL</label>
-                     <input type="text" [(ngModel)]="editEmployee.imageUrl" name="imageUrl" class="form-control"
-                        id="imageUrl" placeholder="Image URL" required pattern="^[^\s]+$" #imageUrl="ngModel">
-                     <div *ngIf="imageUrl.invalid && imageUrl.touched" class="text-danger">
-                        <small *ngIf="imageUrl.errors?.['pattern']">
-                           Image URL cannot contain spaces.
-                        </small>
-                     </div>
-                  </div>
-
-                  <div class="modal-footer">
-                     <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
-                     <button [disabled]="editForm.invalid" (click)="onUpdateEmloyee(editForm.value)"
-                        data-dismiss="modal" class="btn btn-primary">
-                        Save changes
-                     </button>
-                  </div>
-               </form>
-            </div>
-         </div>
-      </div>
-   </div>
-
-   <!-- Delete Modal -->
-   <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
-      aria-hidden="true">
-      <div class="modal-dialog" role="document">
-         <div class="modal-content">
-            <div class="modal-header">
-               <h5 class="modal-title" id="deleteModelLabel">Delete Employee</h5>
-               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-               </button>
-            </div>
-            <div class="modal-body">
-               <p>Are you sure you want to delete employee {{deleteEmployee?.name}}?</p>
-               <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                  <button *ngIf="deleteEmployee" (click)="onDeleteEmloyee(deleteEmployee.id!)" class="btn btn-danger"
-                     data-dismiss="modal">Yes</button>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-</div>
-
-<!-- Notification for no employees -->
-<div *ngIf="employees?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
-   <div class="alert alert-info" role="alert">
-      <h4 class="alert-heading">NO EMPLOYEES!</h4>
-      <p>No Employees were found.</p>
-   </div>
+<div class="container mt-3">
+  <router-outlet></router-outlet>
 </div>

@@ -1,0 +1,28 @@
+<section class="vh-100">
+  <div class="card-login">
+    <h3>SIGN IN TO YOUR ACCOUNT</h3>
+    <form (ngSubmit)="login()">
+      <div>
+        <input type="text" class="form-control" [(ngModel)]="username" name="username" placeholder="Username"
+        required />
+      </div>
+
+      <div>
+        <input type="password" class="form-control" [(ngModel)]="password" name="password" placeholder="Password"
+        required />
+      </div>
+
+      <div>
+        <label for="role">Select Role: </label>
+        <select class="form-select" [(ngModel)]="role" name="role" required>
+          <option value="" disabled selected>Select role</option>
+          <option value="USER">User</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn-login">SIGN IN</button>
+    </form>
+
+  </div>
+</section>

@@ -1,0 +1,4 @@
+/* push right only on lg and up */
+@media (min-width: 992px) {
+  .push-right-lg { margin-left: auto; }
+}

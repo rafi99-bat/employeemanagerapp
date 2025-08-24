@@ -28,6 +28,15 @@ export class AuthService {
     );
   }
 
+  register(username: string, password: string, role: string): Observable<string> {
+    const url = `${this.baseUrl}/users/create`;
+    return this.http.post(url, null, {
+      params: { username, password, role },
+      responseType: 'text'
+    });
+  }
+
+
   getAuthHeader(): string {
     return sessionStorage.getItem('authHeader') || '';
   }

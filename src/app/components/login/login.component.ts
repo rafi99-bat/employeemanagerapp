@@ -15,11 +15,6 @@ export class LoginComponent {
   constructor(private auth: AuthService, private router: Router) { }
 
   login(): void {
-    /*if (this.auth.login(this.username, this.password, this.role)) {
-      this.router.navigate(['/dashboard']);
-    } else {
-      alert('Login failed. Please check your credentials.');
-    }*/
     this.auth.login(this.username, this.password, this.role).subscribe({
       next: success => {
         if (success) {
@@ -34,6 +29,10 @@ export class LoginComponent {
         }
       }
     });
+  }
+
+  register() {
+    this.router.navigate(['/register']);
   }
 
 }

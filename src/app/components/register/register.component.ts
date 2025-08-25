@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 export class RegisterComponent {
   username = '';
   password = '';
-  role = 'USER';  // default role for normal users
+  role = 'ROLE_USER';  // default role for normal users
 
   constructor(private auth: AuthService, private router: Router) {}
 

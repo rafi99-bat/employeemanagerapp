@@ -20,6 +20,15 @@ export class DashboardComponent {
 
   constructor(private empService: EmployeeService, private auth: AuthService, private searchService: SearchService) { }
 
+  /*ngOnInit(): void {
+    this.role = this.auth.getRole();
+    this.loadEmployees();
+
+    this.searchService.searchTerm$.subscribe(term => {
+      this.applySearch(term);
+    });
+  }*/
+
   ngOnInit(): void {
     this.role = this.auth.getRole();
     this.loadEmployees();
@@ -27,7 +36,7 @@ export class DashboardComponent {
     this.searchService.searchTerm$.subscribe(term => {
       this.applySearch(term);
     });
-  }
+  };
 
   loadEmployees(): void {
     this.empService.getEmployees().subscribe(data => {
@@ -60,21 +69,23 @@ export class DashboardComponent {
   }
 
   onSaveEmployee() {
-    if (this.modalMode === 'add') {
-      this.empService.addEmployee(this.selectedEmployee).subscribe(() => {
-        this.loadEmployees();
-        this.modalRef?.hide();
-      });
-    } else if (this.modalMode === 'edit') {
-      this.empService.updateEmployee(this.selectedEmployee).subscribe(() => {
-        this.loadEmployees();
-        this.modalRef?.hide();
-      });
+    if (this.role === 'ROLE_ADMIN') {
+      if (this.modalMode === 'add') {
+        this.empService.addEmployee(this.selectedEmployee).subscribe(() => {
+          this.loadEmployees();
+          this.modalRef?.hide();
+        });
+      } else if (this.modalMode === 'edit') {
+        this.empService.updateEmployee(this.selectedEmployee).subscribe(() => {
+          this.loadEmployees();
+          this.modalRef?.hide();
+        });
+      }
     }
   }
 
   deleteEmployee(id: number) {
-    if (this.role === 'ADMIN') {
+    if (this.role === 'ROLE_ADMIN') {
       this.empService.deleteEmployee(id).subscribe(() => this.loadEmployees());
       this.modalRef?.hide();
     }

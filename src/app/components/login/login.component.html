@@ -16,13 +16,16 @@
         <label for="role">Select Role: </label>
         <select class="form-select" [(ngModel)]="role" name="role" required>
           <option value="" disabled selected>Select role</option>
-          <option value="USER">User</option>
-          <option value="ADMIN">Admin</option>
+          <option value="ROLE_USER">User</option>
+          <option value="ROLE_ADMIN">Admin</option>
         </select>
       </div>
 
       <button type="submit" class="btn-login">SIGN IN</button>
     </form>
-    <button class="btn-register" routerLink="/register">REGISTER</button>
+    <!-- <button class="btn-register" routerLink="/register">REGISTER</button> -->
+     <div class="register-link mt-3">
+      <p>Not a member? <a routerLink="/register">Register</a></p>
+     </div>
   </div>
 </section>

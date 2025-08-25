@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Employee Dashboard</h3>
-    <div *ngIf="role === 'ADMIN'">
+    <div *ngIf="role === 'ROLE_ADMIN'">
       <button class="btn btn-primary" (click)="onOpenModal(null, 'add')">Add Employee</button>
     </div>
   </div>
@@ -22,7 +22,7 @@
           <li class="list-group-item"><i class="fa fa-envelope float-right"></i>{{employee?.email}}</li>
           <li class="list-group-item"><i class="fa fa-phone float-right"></i>Phone : {{employee?.phone}}</li>
         </ul>
-        <div class="card-body" *ngIf="role === 'ADMIN'">
+        <div class="card-body" *ngIf="role === 'ROLE_ADMIN'">
           <div class="float-right btn-group btn-group-sm">
             <a (click)="onOpenModal(employee, 'edit')" class="btn btn-primary tooltips" data-placement="top"
               data-original-title="Edit">

@@ -37,7 +37,7 @@
   </div>
 
   <!-- ✅ Employee Modal -->
-  <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+  <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <form (ngSubmit)="onSaveEmployee()">
@@ -49,24 +49,24 @@
           <div class="modal-body">
             <div class="form-group">
               <label for="name">Name</label>
-              <input [(ngModel)]="selectedEmployee.name" name="name" class="form-control" placeholder="Name" required
-                pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+" #name="ngModel">
+              <textarea rows="1" [(ngModel)]="selectedEmployee.name" (input)="autoResize($event)" name="name" class="form-control auto-expand"
+                placeholder="Name" required pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+" #name="ngModel"></textarea>
               <div *ngIf="name.invalid && name.touched" class="text-danger">
                 Name cannot be empty, start/end with spaces, or have multiple consecutive spaces.
               </div>
             </div>
             <div class="form-group">
               <label for="email">Email</label>
-              <input [(ngModel)]="selectedEmployee.email" name="email" class="form-control" placeholder="Email" required
-                pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" #email="ngModel">
+              <textarea rows="1" [(ngModel)]="selectedEmployee.email" (input)="autoResize($event)" name="email" class="form-control auto-expand"
+                placeholder="Email" required email #email="ngModel"></textarea>
               <div *ngIf="email.invalid && email.touched" class="text-danger">
                 Enter a valid email address.
               </div>
             </div>
             <div class="form-group">
               <label for="jobTitle">Job Title</label>
-              <input [(ngModel)]="selectedEmployee.jobTitle" name="jobTitle" class="form-control"
-                placeholder="Job Title" required pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+" #jobTitle="ngModel">
+              <textarea rows="1" [(ngModel)]="selectedEmployee.jobTitle" (input)="autoResize($event)" name="jobTitle" class="form-control auto-expand"
+                placeholder="Job Title" required pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+" #jobTitle="ngModel"></textarea>
               <div *ngIf="jobTitle.invalid && jobTitle.touched" class="text-danger">
                 Job title cannot be empty or contain invalid spaces.
               </div>
@@ -81,8 +81,8 @@
             </div>
             <div class="form-group">
               <label for="imageUrl">Image URL</label>
-              <input [(ngModel)]="selectedEmployee.imageUrl" name="imageUrl" class="form-control"
-                placeholder="Image URL" required pattern="^\S+$" #imageUrl="ngModel">
+              <textarea rows="1" [(ngModel)]="selectedEmployee.imageUrl" (input)="autoResize($event)" name="imageUrl" class="form-control auto-expand"
+                placeholder="Image URL" required pattern="^(?!.*\s).+" #imageUrl="ngModel"></textarea>
               <div *ngIf="imageUrl.invalid && imageUrl.touched" class="text-danger">
                 Image URL cannot contain spaces.
               </div>
@@ -100,8 +100,7 @@
   </div>
 
   <!-- Delete Modal -->
-  <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="deleteEmployeeModalLabel"
-    aria-hidden="true">
+  <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="deleteEmployeeModalLabel">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">

@@ -1,0 +1,10 @@
+#employeemodal, #deleteemployeemodal {
+    display: none;
+}
+
+.auto-expand {
+  overflow: hidden;
+  resize: none;   /* prevent manual resize if you want only auto */
+  height: 38px; /* initial height */
+  max-height: 200px; /* optional limit */
+}

@@ -20,7 +20,7 @@ export class AppComponent {
         filter(event => event instanceof NavigationEnd)
       )
       .subscribe(event => {
-        const navEnd = event as NavigationEnd; // ✅ cast here
+        const navEnd = event as NavigationEnd;
         this.showNavbar = !navEnd.urlAfterRedirects.includes('/login');
       });
   }

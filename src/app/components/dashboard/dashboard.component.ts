@@ -10,6 +10,26 @@ import * as bootstrap from 'bootstrap';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
+  autoResize(event: Event): void {
+    const target = event.target as HTMLTextAreaElement | null;
+    if (!target) return;
+
+    target.style.height = 'auto';
+    target.style.height = target.scrollHeight + 'px';
+  }
+
+  ngAfterViewInit() {
+    const modal = document.getElementById('employeeModal');
+    if (modal) {
+      modal.addEventListener('hidden.bs.modal', () => {
+        const textareas = modal.querySelectorAll<HTMLTextAreaElement>('textarea.auto-expand');
+        textareas.forEach(t => {
+          t.style.height = '38px';
+        });
+      });
+    }
+  }
+
   employees: Employee[] = [];
   filteredEmployees: Employee[] = [];
   role = '';
@@ -19,15 +39,6 @@ export class DashboardComponent {
   private modalRef?: bootstrap.Modal;
 
   constructor(private empService: EmployeeService, private auth: AuthService, private searchService: SearchService) { }
-
-  /*ngOnInit(): void {
-    this.role = this.auth.getRole();
-    this.loadEmployees();
-
-    this.searchService.searchTerm$.subscribe(term => {
-      this.applySearch(term);
-    });
-  }*/
 
   ngOnInit(): void {
     this.role = this.auth.getRole();
@@ -41,7 +52,7 @@ export class DashboardComponent {
   loadEmployees(): void {
     this.empService.getEmployees().subscribe(data => {
       this.employees = data;
-      this.filteredEmployees = data; // show all initially
+      this.filteredEmployees = data;
     });
   }
 
@@ -96,9 +107,9 @@ export class DashboardComponent {
     if (mode === 'add') {
       this.selectedEmployee = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
     } else if (mode === 'edit' && employee) {
-      this.selectedEmployee = { ...employee }; // copy for editing
+      this.selectedEmployee = { ...employee };
     } else if (mode === 'delete' && employee) {
-      this.selectedEmployee = { ...employee }; // copy for deletion
+      this.selectedEmployee = { ...employee };
     }
     const modalEl = document.getElementById('employeeModal');
     const deleteModalEl = document.getElementById('deleteEmployeeModal');

@@ -10,12 +10,11 @@ import { AuthService } from 'src/app/services/auth.service';
 export class RegisterComponent {
   username = '';
   password = '';
-  role = 'ROLE_USER';  // default role for normal users
 
   constructor(private auth: AuthService, private router: Router) {}
 
   register(): void {
-    this.auth.register(this.username, this.password, this.role).subscribe({
+    this.auth.register(this.username, this.password).subscribe({
       next: res => {
         alert('Registration successful!');
         this.router.navigate(['/login']);

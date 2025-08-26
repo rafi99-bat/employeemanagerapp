@@ -14,7 +14,8 @@ html, body {
   margin: 0;
   padding: 0;
   background-color: #ffffff;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 app-root, main {

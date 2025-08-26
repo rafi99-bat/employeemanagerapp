@@ -21,15 +21,6 @@ export class EmployeeService {
 
   constructor(private http: HttpClient, private auth: AuthService) { }
 
-  /*private getHeaders(): { headers: HttpHeaders } {
-    return {
-      headers: new HttpHeaders({
-        'Authorization': this.auth.getAuthHeader(),
-        'Content-Type': 'application/json'
-      })
-    };
-  }*/
-
   private getHeaders(): { headers: HttpHeaders } {
     return {
       headers: new HttpHeaders({

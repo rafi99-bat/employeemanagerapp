@@ -23,6 +23,7 @@ export class AuthService {
       .pipe(
         map(res => {
           sessionStorage.setItem('token', res.token);
+          console.log(res.token);
           return true;
         })
       );
@@ -39,11 +40,36 @@ export class AuthService {
     return sessionStorage.getItem('token') || '';
   }
 
+  getTokenExpiration(token: string): number {
+    if (!token) return 0;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.exp * 1000; // convert seconds to ms
+  }
+
+  autoLogout() {
+    const token = this.getToken();
+    if (!token) return;
+
+    const expTime = this.getTokenExpiration(token);
+    const currentTime = Date.now();
+    const timeout = expTime - currentTime;
+
+    if (timeout <= 0) {
+      this.logout(); // already expired
+    } else {
+      setTimeout(() => {
+        alert('Session expired. Logging out.');
+        this.logout();
+      }, timeout);
+    }
+  }
+
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
 
   logout(): void {
+    localStorage.removeItem('token');
     sessionStorage.clear();
     this.router.navigate(['/login']);
   }

@@ -13,6 +13,8 @@ export class AppComponent {
   title = 'employeemanagerapp';
   showNavbar = true;
   searchTerm = '';
+  showSearch: boolean = false;
+  showSidebar: boolean = false;
 
   constructor(public auth: AuthService, private router: Router, private searchService: SearchService) {
     this.router.events

@@ -3,6 +3,11 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 
+export interface Religion {
+  id?: number;
+  name: string;
+}
+
 export interface Employee {
   id?: number;
   name: string;
@@ -10,6 +15,7 @@ export interface Employee {
   jobTitle: string;
   phone: string;
   imageUrl: string;
+  religion?: Religion;
   employeeCode?: string;
 }
 

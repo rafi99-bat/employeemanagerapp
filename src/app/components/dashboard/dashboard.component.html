@@ -6,21 +6,30 @@
     </div>
   </div>
 
+  <!-- Employee Card -->
   <div class="row">
-    <div class="col-md-6 col-xl-3" *ngFor="let employee of filteredEmployees">
-      <div class="card m-b-30">
+    <div class="col-md-6 col-xl-3 mb-4" *ngFor="let employee of filteredEmployees">
+      <div class="card employee-card h-100">
         <div class="card-body row">
           <div class="col-6">
-            <a href=""><img src="{{employee?.imageUrl}}" alt="" class="img-fluid rounded-circle w-60"></a>
+            <a (click)="onOpenModal(employee, 'view')"><img src="{{employee?.imageUrl}}" alt=""
+                class="img-fluid rounded-circle w-60"></a>
           </div>
           <div class="col-6 card-title align-self-center mb-0">
-            <h5>{{employee?.name}}</h5>
-            <p class="m-0">{{employee?.jobTitle}}</p>
+            <h5 class="employee-name">{{employee?.name}}</h5>
+            <p class="m-0 text-truncate">{{employee?.jobTitle}}</p>
           </div>
         </div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item"><i class="fa fa-envelope float-right"></i>{{employee?.email}}</li>
-          <li class="list-group-item"><i class="fa fa-phone float-right"></i>Phone : {{employee?.phone}}</li>
+          <li class="list-group-item text-truncate">
+            <i class="fa fa-envelope float-right"></i>{{employee?.email}}
+          </li>
+          <li class="list-group-item text-truncate">
+            <i class="fa fa-phone float-right"></i>Phone : {{employee?.phone}}
+          </li>
+          <li class="list-group-item text-truncate">
+            <i class="fa fa-star float-right"></i>Religion : {{employee?.religion?.name}}
+          </li>
         </ul>
         <div class="card-body" *ngIf="role === 'ROLE_ADMIN'">
           <div class="float-right btn-group btn-group-sm">
@@ -36,37 +45,64 @@
     </div>
   </div>
 
-  <!-- ✅ Employee Modal -->
-  <div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel">
-    <div class="modal-dialog modal-lg">
+  <!-- Employee Details Modal -->
+  <div class="modal fade employee-details-modal" id="employeeDetailsModal" tabindex="-1" data-bs-backdrop="static"
+    data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <form (ngSubmit)="onSaveEmployee()">
+        <div class="modal-header">
+          <h5 class="modal-title">{{selectedEmployee.name}}</h5>
+          <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <img [src]="selectedEmployee.imageUrl" class="img-fluid rounded-circle mb-3" alt="">
+          <p><strong>Job Title:</strong> {{selectedEmployee.jobTitle}}</p>
+          <p><strong>Email:</strong> {{selectedEmployee.email}}</p>
+          <p><strong>Phone:</strong> {{selectedEmployee.phone}}</p>
+          <p *ngIf="selectedEmployee.religion"><strong>Religion:</strong> {{selectedEmployee.religion.name}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ Employee Add/Edit Modal -->
+  <div class="modal fade" id="employeeModal" tabindex="-1" data-bs-backdrop="static"
+    aria-labelledby="addEmployeeModalLabel">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <form (ngSubmit)="onSaveEmployee()" onkeydown="return event.key != 'Enter';">
           <div class="modal-header">
             <h5 class="modal-title" id="employeeModalLabel">{{modalMode === 'add' ? 'Add Employee' : 'Edit Employee'}}
             </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+              <i class="fa fa-times"></i>
+            </button>
           </div>
           <div class="modal-body">
             <div class="form-group">
               <label for="name">Name</label>
-              <textarea rows="1" [(ngModel)]="selectedEmployee.name" (input)="autoResize($event)" name="name" class="form-control auto-expand"
-                placeholder="Name" required pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+" #name="ngModel"></textarea>
+              <textarea rows="1" [(ngModel)]="selectedEmployee.name" (input)="autoResize($event)" name="name"
+                class="form-control auto-expand" placeholder="Name" required pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+"
+                #name="ngModel"></textarea>
               <div *ngIf="name.invalid && name.touched" class="text-danger">
                 Name cannot be empty, start/end with spaces, or have multiple consecutive spaces.
               </div>
             </div>
             <div class="form-group">
               <label for="email">Email</label>
-              <textarea rows="1" [(ngModel)]="selectedEmployee.email" (input)="autoResize($event)" name="email" class="form-control auto-expand"
-                placeholder="Email" required email #email="ngModel"></textarea>
+              <textarea rows="1" [(ngModel)]="selectedEmployee.email" (input)="autoResize($event)" name="email"
+                class="form-control auto-expand" placeholder="Email" required email #email="ngModel"></textarea>
               <div *ngIf="email.invalid && email.touched" class="text-danger">
                 Enter a valid email address.
               </div>
             </div>
             <div class="form-group">
               <label for="jobTitle">Job Title</label>
-              <textarea rows="1" [(ngModel)]="selectedEmployee.jobTitle" (input)="autoResize($event)" name="jobTitle" class="form-control auto-expand"
-                placeholder="Job Title" required pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+" #jobTitle="ngModel"></textarea>
+              <textarea rows="1" [(ngModel)]="selectedEmployee.jobTitle" (input)="autoResize($event)" name="jobTitle"
+                class="form-control auto-expand" placeholder="Job Title" required
+                pattern="^(?!\s)(?!.*\s{2,})(?!\s*$).+" #jobTitle="ngModel"></textarea>
               <div *ngIf="jobTitle.invalid && jobTitle.touched" class="text-danger">
                 Job title cannot be empty or contain invalid spaces.
               </div>
@@ -80,9 +116,18 @@
               </div>
             </div>
             <div class="form-group">
+              <label for="religion">Religion</label>
+              <select id="religion" [(ngModel)]="selectedEmployee.religion" name="religion" class="form-control">
+                <option *ngFor="let r of religions" [ngValue]="r">
+                  {{ r.name }}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
               <label for="imageUrl">Image URL</label>
-              <textarea rows="1" [(ngModel)]="selectedEmployee.imageUrl" (input)="autoResize($event)" name="imageUrl" class="form-control auto-expand"
-                placeholder="Image URL" required pattern="^(?!.*\s).+" #imageUrl="ngModel"></textarea>
+              <textarea rows="1" [(ngModel)]="selectedEmployee.imageUrl" (input)="autoResize($event)" name="imageUrl"
+                class="form-control auto-expand" placeholder="Image URL" required pattern="^(?!.*\s).+"
+                #imageUrl="ngModel"></textarea>
               <div *ngIf="imageUrl.invalid && imageUrl.touched" class="text-danger">
                 Image URL cannot contain spaces.
               </div>
@@ -100,12 +145,15 @@
   </div>
 
   <!-- Delete Modal -->
-  <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" aria-labelledby="deleteEmployeeModalLabel">
-    <div class="modal-dialog">
+  <div class="modal fade" id="deleteEmployeeModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
+    aria-labelledby="deleteEmployeeModalLabel">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="deleteEmployeeModalLabel">Delete Employee</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times"></i>
+          </button>
         </div>
         <div class="modal-body">
           Are you sure you want to delete this employee?

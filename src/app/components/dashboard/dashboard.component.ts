@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { Employee, EmployeeService } from 'src/app/services/employee.service';
+import { Employee, EmployeeService, Religion } from 'src/app/services/employee.service';
 import { SearchService } from 'src/app/services/search.service';
 import * as bootstrap from 'bootstrap';
+import { ReligionService } from 'src/app/services/religion.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -30,19 +31,21 @@ export class DashboardComponent {
     }
   }
 
+  religions: Religion[] = [];
   employees: Employee[] = [];
   filteredEmployees: Employee[] = [];
   role = '';
-  newEmployee: Employee = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
-  selectedEmployee: Employee = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
-  modalMode: 'add' | 'edit' | 'delete' = 'add';
+  newEmployee: Employee & { religionName?: string } = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
+  selectedEmployee: Employee & { religionName?: string } = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
+  modalMode: 'add' | 'edit' | 'delete' | 'view' = 'view';
   private modalRef?: bootstrap.Modal;
 
-  constructor(private empService: EmployeeService, private auth: AuthService, private searchService: SearchService) { }
+  constructor(private empService: EmployeeService, private auth: AuthService, private searchService: SearchService, private religionService: ReligionService) { }
 
   ngOnInit(): void {
     this.role = this.auth.getRole();
     this.loadEmployees();
+    this.loadReligions();
 
     this.searchService.searchTerm$.subscribe(term => {
       this.applySearch(term);
@@ -54,6 +57,17 @@ export class DashboardComponent {
       this.employees = data;
       this.filteredEmployees = data;
     });
+  }
+
+  loadReligions(): void {
+    this.religionService.getReligions().subscribe(
+      (response: Religion[]) => {
+        this.religions = response;
+      },
+      (error) => {
+        console.error('Error fetching religions:', error);
+      }
+    );
   }
 
   applySearch(term: string): void {
@@ -74,24 +88,35 @@ export class DashboardComponent {
     if (this.role === 'ADMIN') {
       this.empService.addEmployee(this.newEmployee).subscribe(() => {
         this.loadEmployees();
-        this.newEmployee = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
+        this.newEmployee = { name: '', email: '', jobTitle: '', phone: '', religionName: '', imageUrl: '' };
       });
     }
   }
 
   onSaveEmployee() {
-    if (this.role === 'ROLE_ADMIN') {
-      if (this.modalMode === 'add') {
-        this.empService.addEmployee(this.selectedEmployee).subscribe(() => {
-          this.loadEmployees();
-          this.modalRef?.hide();
+    if (this.modalMode === 'add' || this.modalMode === 'edit') {
+      if (this.selectedEmployee.religionName) {
+        this.religionService.addReligion(this.selectedEmployee.religionName).subscribe(religion => {
+          this.selectedEmployee.religion = religion;
+          this.saveEmployeeData();
         });
-      } else if (this.modalMode === 'edit') {
-        this.empService.updateEmployee(this.selectedEmployee).subscribe(() => {
-          this.loadEmployees();
-          this.modalRef?.hide();
-        });
+      } else {
+        this.saveEmployeeData();
       }
+    }
+  }
+
+  saveEmployeeData() {
+    if (this.modalMode === 'add') {
+      this.empService.addEmployee(this.selectedEmployee).subscribe(() => {
+        this.loadEmployees();
+        this.modalRef?.hide();
+      });
+    } else if (this.modalMode === 'edit') {
+      this.empService.updateEmployee(this.selectedEmployee).subscribe(() => {
+        this.loadEmployees();
+        this.modalRef?.hide();
+      });
     }
   }
 
@@ -102,7 +127,7 @@ export class DashboardComponent {
     }
   }
 
-  onOpenModal(employee: Employee | null, mode: 'add' | 'edit' | 'delete'): void {
+  onOpenModal(employee: Employee | null, mode: 'add' | 'edit' | 'delete' | 'view'): void {
     this.modalMode = mode;
     if (mode === 'add') {
       this.selectedEmployee = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
@@ -110,13 +135,19 @@ export class DashboardComponent {
       this.selectedEmployee = { ...employee };
     } else if (mode === 'delete' && employee) {
       this.selectedEmployee = { ...employee };
+    } else if (mode === 'view' && employee) {
+      this.selectedEmployee = { ...employee };
     }
     const modalEl = document.getElementById('employeeModal');
     const deleteModalEl = document.getElementById('deleteEmployeeModal');
+    const viewModalEl = document.getElementById('employeeDetailsModal');
     if (mode === 'delete' && deleteModalEl) {
       this.modalRef = new bootstrap.Modal(deleteModalEl);
       this.modalRef.show();
       return;
+    } else if (mode === 'view' && viewModalEl) {
+      this.modalRef = new bootstrap.Modal(viewModalEl);
+      this.modalRef.show();
     } else if (modalEl) {
       this.modalRef = new bootstrap.Modal(modalEl);
       this.modalRef.show();

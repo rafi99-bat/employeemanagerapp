@@ -51,4 +51,22 @@ export class EmployeeService {
   deleteEmployee(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`, this.getHeaders());
   }
+
+  // employee.service.ts
+  uploadEmployeeImage(employeeId: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.auth.getToken()}`
+      // NOTE: Do NOT set Content-Type here; the browser will set it automatically for FormData
+    });
+
+    return this.http.post(
+      `${this.apiUrl}/image/upload/${employeeId}`,
+      formData,
+      { headers, responseType: 'text' } // avoid JSON parsing error
+    );
+  }
+
 }

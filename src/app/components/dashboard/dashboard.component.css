@@ -32,8 +32,8 @@
 
 /* 2. Fixed card size for user */
 .employee-card-user {
-  min-height: 290px; /* Adjust depending on design */
-  max-height: 290px;
+  min-height: 300px; /* Adjust depending on design */
+  max-height: 300px;
   overflow: hidden;
 }
 

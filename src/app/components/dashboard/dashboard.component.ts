@@ -38,6 +38,8 @@ export class DashboardComponent {
   newEmployee: Employee & { religionName?: string } = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
   selectedEmployee: Employee & { religionName?: string } = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
   modalMode: 'add' | 'edit' | 'delete' | 'view' = 'view';
+  filteredReligions: any[] = [];
+  selectedFile?: File;
   private modalRef?: bootstrap.Modal;
 
   constructor(private empService: EmployeeService, private auth: AuthService, private searchService: SearchService, private religionService: ReligionService) { }
@@ -45,7 +47,7 @@ export class DashboardComponent {
   ngOnInit(): void {
     this.role = this.auth.getRole();
     this.loadEmployees();
-    if(this.role === 'ROLE_ADMIN') this.loadReligions();
+    if (this.role === 'ROLE_ADMIN') this.loadReligions();
 
     this.searchService.searchTerm$.subscribe(term => {
       this.applySearch(term);
@@ -68,6 +70,22 @@ export class DashboardComponent {
         console.error('Error fetching religions:', error);
       }
     );
+  }
+
+  filterReligions() {
+    const term = this.selectedEmployee.religion?.name?.toLowerCase() || '';
+    if (term === '') {
+      this.filteredReligions = [];
+      return;
+    }
+    this.filteredReligions = this.religions.filter(r =>
+      r.name.toLowerCase().includes(term)
+    );
+  }
+
+  selectReligion(r: any) {
+    this.selectedEmployee.religion = r;
+    this.filteredReligions = [];
   }
 
   applySearch(term: string): void {
@@ -93,6 +111,13 @@ export class DashboardComponent {
     }
   }
 
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+    }
+  }
+
   onSaveEmployee() {
     if (this.modalMode === 'add' || this.modalMode === 'edit') {
       if (this.selectedEmployee.religionName) {
@@ -108,14 +133,23 @@ export class DashboardComponent {
 
   saveEmployeeData() {
     if (this.modalMode === 'add') {
-      this.empService.addEmployee(this.selectedEmployee).subscribe(() => {
+      this.empService.addEmployee(this.selectedEmployee).subscribe(emp => {
         this.loadEmployees();
         this.modalRef?.hide();
+        this.selectedFile = undefined;
       });
     } else if (this.modalMode === 'edit') {
-      this.empService.updateEmployee(this.selectedEmployee).subscribe(() => {
-        this.loadEmployees();
-        this.modalRef?.hide();
+      this.empService.updateEmployee(this.selectedEmployee).subscribe(emp => {
+        if (this.selectedFile) {
+          this.empService.uploadEmployeeImage(emp.id!, this.selectedFile).subscribe(() => {
+            this.loadEmployees();
+            this.modalRef?.hide();
+            this.selectedFile = undefined;
+          });
+        } else {
+          this.loadEmployees();
+          this.modalRef?.hide();
+        }
       });
     }
   }
@@ -152,6 +186,14 @@ export class DashboardComponent {
       this.modalRef = new bootstrap.Modal(modalEl);
       this.modalRef.show();
     }
+  }
+
+  compareReligion(r1: any, r2: any): boolean {
+    return r1 && r2 ? r1.id === r2.id : r1 === r2;
+  }
+
+  onReligionChange(name: string) {
+    this.selectedEmployee.religion = this.religions.find(r => r.name === name);
   }
 
 }

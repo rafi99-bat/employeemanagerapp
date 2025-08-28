@@ -16,15 +16,29 @@
   margin-bottom: 1rem; /* For Bootstrap 4 */
 }
 
-/* 2. Fixed card size */
-.employee-card {
+/* 2. Fixed card size for admin */
+.employee-card-admin {
   min-height: 380px; /* Adjust depending on design */
   max-height: 380px;
   overflow: hidden;
 }
 
 /* Ensure consistent width */
-.employee-card {
+.employee-card-admin {
+  width: 100%; /* responsive width */
+  max-width: 300px; /* fixed width for consistency */
+  margin: auto; /* center in column */
+}
+
+/* 2. Fixed card size for user */
+.employee-card-user {
+  min-height: 290px; /* Adjust depending on design */
+  max-height: 290px;
+  overflow: hidden;
+}
+
+/* Ensure consistent width */
+.employee-card-user {
   width: 100%; /* responsive width */
   max-width: 300px; /* fixed width for consistency */
   margin: auto; /* center in column */

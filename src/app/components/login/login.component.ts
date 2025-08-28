@@ -24,7 +24,6 @@ export class LoginComponent {
       },
       error: err => {
         if (err.status === 401) {
-          //alert('Login failed. Please check your credentials.');
           this.loginError = 'Login failed. Please check your credentials.';
           this.credFailed = true;
         }

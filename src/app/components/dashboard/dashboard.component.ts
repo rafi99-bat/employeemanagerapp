@@ -45,7 +45,7 @@ export class DashboardComponent {
   ngOnInit(): void {
     this.role = this.auth.getRole();
     this.loadEmployees();
-    this.loadReligions();
+    if(this.role === 'ROLE_ADMIN') this.loadReligions();
 
     this.searchService.searchTerm$.subscribe(term => {
       this.applySearch(term);
@@ -85,7 +85,7 @@ export class DashboardComponent {
   }
 
   addEmployee(): void {
-    if (this.role === 'ADMIN') {
+    if (this.role === 'ROLE_ADMIN') {
       this.empService.addEmployee(this.newEmployee).subscribe(() => {
         this.loadEmployees();
         this.newEmployee = { name: '', email: '', jobTitle: '', phone: '', religionName: '', imageUrl: '' };

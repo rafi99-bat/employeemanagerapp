@@ -9,7 +9,7 @@
   <!-- Employee Card -->
   <div class="row">
     <div class="col-md-6 col-xl-3 mb-4" *ngFor="let employee of filteredEmployees">
-      <div class="card employee-card h-100">
+      <div class="card h-100" [ngClass]="role === 'ROLE_ADMIN' ? 'employee-card-admin' : 'employee-card-user'">
         <div class="card-body row">
           <div class="col-6">
             <a (click)="onOpenModal(employee, 'view')"><img src="{{employee?.imageUrl}}" alt=""

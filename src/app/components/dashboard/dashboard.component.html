@@ -119,15 +119,6 @@
                 Phone must be 11 digits starting with 01.
               </div>
             </div>
-            <!-- <div class="form-group">
-              <label for="religion">Religion</label>
-              <select id="religion" [(ngModel)]="selectedEmployee.religion" name="religion" class="form-control"
-                [compareWith]="compareReligion">
-                <option *ngFor="let r of religions" [ngValue]="r">
-                  {{ r.name }}
-                </option>
-              </select>
-            </div> -->
             <div class="form-group">
               <label for="religion">Religion</label>
               <input list="religionList" id="religion" [ngModel]="selectedEmployee.religion?.name"

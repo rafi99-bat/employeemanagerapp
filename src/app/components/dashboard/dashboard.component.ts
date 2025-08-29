@@ -35,7 +35,7 @@ export class DashboardComponent {
   employees: Employee[] = [];
   filteredEmployees: Employee[] = [];
   role = '';
-  newEmployee: Employee & { religionName?: string } = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
+  newEmployee: Employee = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
   selectedEmployee: Employee & { religionName?: string } = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
   modalMode: 'add' | 'edit' | 'delete' | 'view' = 'view';
   filteredReligions: any[] = [];
@@ -106,7 +106,7 @@ export class DashboardComponent {
     if (this.role === 'ROLE_ADMIN') {
       this.empService.addEmployee(this.newEmployee).subscribe(() => {
         this.loadEmployees();
-        this.newEmployee = { name: '', email: '', jobTitle: '', phone: '', religionName: '', imageUrl: '' };
+        this.newEmployee = { name: '', email: '', jobTitle: '', phone: '', imageUrl: '' };
       });
     }
   }
@@ -118,10 +118,27 @@ export class DashboardComponent {
     }
   }
 
-  onSaveEmployee() {
+  /*onSaveEmployee() {
     if (this.modalMode === 'add' || this.modalMode === 'edit') {
       if (this.selectedEmployee.religionName) {
         this.religionService.addReligion(this.selectedEmployee.religionName).subscribe(religion => {
+          this.selectedEmployee.religion = religion;
+          this.saveEmployeeData();
+        });
+      } else {
+        this.saveEmployeeData();
+      }
+    }
+  }*/
+
+  onSaveEmployee() {
+    if (this.modalMode === 'add' || this.modalMode === 'edit') {
+      const religionName = this.selectedEmployee.religion?.name;
+      console.log('Religion name:', religionName);
+
+      if (religionName) {
+        this.religionService.addReligion(religionName).subscribe(religion => {
+          console.log('Added religion:', religion);
           this.selectedEmployee.religion = religion;
           this.saveEmployeeData();
         });
@@ -193,7 +210,12 @@ export class DashboardComponent {
   }
 
   onReligionChange(name: string) {
-    this.selectedEmployee.religion = this.religions.find(r => r.name === name);
+    const found = this.religions.find(r => r.name === name);
+    if (found) {
+      this.selectedEmployee.religion = found;
+    } else {
+      this.selectedEmployee.religion = { id: undefined, name: name } as Religion;
+    }
   }
 
 }

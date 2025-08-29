@@ -118,27 +118,12 @@ export class DashboardComponent {
     }
   }
 
-  /*onSaveEmployee() {
-    if (this.modalMode === 'add' || this.modalMode === 'edit') {
-      if (this.selectedEmployee.religionName) {
-        this.religionService.addReligion(this.selectedEmployee.religionName).subscribe(religion => {
-          this.selectedEmployee.religion = religion;
-          this.saveEmployeeData();
-        });
-      } else {
-        this.saveEmployeeData();
-      }
-    }
-  }*/
-
   onSaveEmployee() {
     if (this.modalMode === 'add' || this.modalMode === 'edit') {
       const religionName = this.selectedEmployee.religion?.name;
-      console.log('Religion name:', religionName);
 
       if (religionName) {
         this.religionService.addReligion(religionName).subscribe(religion => {
-          console.log('Added religion:', religion);
           this.selectedEmployee.religion = religion;
           this.saveEmployeeData();
         });

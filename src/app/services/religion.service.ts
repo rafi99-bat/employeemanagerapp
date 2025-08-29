@@ -25,15 +25,10 @@ export class ReligionService {
     return this.http.get<Religion[]>(`${this.baseUrl}/all`, this.getHeaders());
   }
 
-  /*addReligion(name: string): Observable<Religion> {
-    return this.http.post<Religion>(`${this.baseUrl}/add`, name, this.getHeaders());
-  }*/
-
   addReligion(name: string): Observable<Religion> {
-    console.log('Adding religion with name:', name); // Debug log
     return this.http.post<Religion>(
       `${this.baseUrl}/add`,
-      { name: name },   // send JSON object, not raw string
+      { name: name },
       this.getHeaders()
     );
   }

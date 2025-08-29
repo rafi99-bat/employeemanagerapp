@@ -59,13 +59,12 @@ export class EmployeeService {
 
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${this.auth.getToken()}`
-      // NOTE: Do NOT set Content-Type here; the browser will set it automatically for FormData
     });
 
     return this.http.post(
       `${this.apiUrl}/image/upload/${employeeId}`,
       formData,
-      { headers, responseType: 'text' } // avoid JSON parsing error
+      { headers, responseType: 'text' }
     );
   }
 

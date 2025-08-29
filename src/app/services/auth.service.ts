@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
-import jwtDecode from 'jwt-decode'; // npm install jwt-decode
+import jwtDecode from 'jwt-decode';
 
 interface JwtPayload {
   sub: string;       // username
@@ -23,7 +23,6 @@ export class AuthService {
       .pipe(
         map(res => {
           sessionStorage.setItem('token', res.token);
-          console.log(res.token);
           return true;
         })
       );
@@ -43,7 +42,7 @@ export class AuthService {
   getTokenExpiration(token: string): number {
     if (!token) return 0;
     const payload = JSON.parse(atob(token.split('.')[1]));
-    return payload.exp * 1000; // convert seconds to ms
+    return payload.exp * 1000;
   }
 
   autoLogout() {
@@ -55,7 +54,7 @@ export class AuthService {
     const timeout = expTime - currentTime;
 
     if (timeout <= 0) {
-      this.logout(); // already expired
+      this.logout();
     } else {
       setTimeout(() => {
         alert('Session expired. Logging out.');

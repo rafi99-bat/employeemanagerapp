@@ -2,62 +2,65 @@
   <div class="container-fluid">
     <a class="navbar-brand" style="color: rgb(228, 237, 245);">Employee Manager</a>
 
-    <div class="d-flex d-lg-none align-items-center">
-        <!-- Search toggle button -->
-        <button class="btn btn-outline-light btn-sm me-2" type="button" style="border: none; color: rgb(228, 237, 245);" (click)="showSearch = !showSearch; showSidebar = false;">
-          <i class="bi bi-search" style="font-size: 1.5rem;"></i>
-        </button>
+    <!-- Mobile buttons (only if logged in) -->
+    <div class="d-flex d-lg-none align-items-center" *ngIf="auth.isLoggedIn()">
+      <!-- Search toggle -->
+      <button class="btn btn-outline-light btn-sm me-2" type="button"
+              style="border: none; color: rgb(228, 237, 245);"
+              (click)="showSearch = !showSearch; showSidebar = false;">
+        <i class="bi bi-search" style="font-size: 1.5rem;"></i>
+      </button>
 
-        <!-- Profile toggle button -->
-        <button class="btn btn-outline-light btn-sm" type="button" style="border: none; color: rgb(228, 237, 245);" (click)="showSidebar = !showSidebar; showSearch = false;">
-          <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
-        </button>
-      </div>
-
-      <!-- Desktop navbar -->
-      <div class="collapse navbar-collapse d-none d-lg-flex justify-content-end">
-        <ul class="navbar-nav">
-          <!-- Inline search for desktop -->
-          <li class="nav-item me-2">
-            <input type="search" class="form-control form-control-sm" placeholder="Search employees..."
-              [(ngModel)]="searchTerm" (input)="onSearchChange()" style="width:200px;">
-          </li>
-
-          <!-- Profile dropdown for desktop -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false" style="color: rgb(228, 237, 245); font-weight: bold;">
-              {{ auth.getUsername().toUpperCase() }}
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown" style="min-width: auto;">
-              <li>
-                <a class="dropdown-item" (click)="auth.logout()" style="cursor: pointer;">
-                  Logout
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Mobile full-width search box -->
-      <div *ngIf="showSearch" class="d-lg-none w-100 mt-2">
-        <input type="search" class="form-control form-control-sm" placeholder="Search employees..."
-          [(ngModel)]="searchTerm" (input)="onSearchChange()">
-      </div>
-
-      <!-- Mobile sidebar/profile dropdown -->
-      <div *ngIf="showSidebar" class="d-lg-none w-100 mt-2">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <span class="navbar-text text-white">{{ auth.getUsername().toUpperCase() }}</span>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#" (click)="auth.logout()" style="cursor: pointer;">Logout</a>
-          </li>
-        </ul>
-      </div>
+      <!-- Profile toggle -->
+      <button class="btn btn-outline-light btn-sm" type="button"
+              style="border: none; color: rgb(228, 237, 245);"
+              (click)="showSidebar = !showSidebar; showSearch = false;">
+        <i class="bi bi-person-circle" style="font-size: 1.5rem;"></i>
+      </button>
     </div>
+
+    <!-- Desktop navbar (only if logged in) -->
+    <div class="collapse navbar-collapse d-none d-lg-flex justify-content-end" *ngIf="auth.isLoggedIn()">
+      <ul class="navbar-nav">
+        <li class="nav-item me-2">
+          <input type="search" class="form-control form-control-sm" placeholder="Search employees..."
+                 [(ngModel)]="searchTerm" (input)="onSearchChange()" style="width:200px;">
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown"
+             aria-expanded="false" style="color: rgb(228, 237, 245); font-weight: bold;">
+            {{ auth.getUsername().toUpperCase() }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown" style="min-width: auto;">
+            <li>
+              <a class="dropdown-item" (click)="auth.logout()" style="cursor: pointer;">
+                Logout
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Mobile full-width search box -->
+    <div *ngIf="showSearch && auth.isLoggedIn()" class="d-lg-none w-100 mt-2">
+      <input type="search" class="form-control form-control-sm" placeholder="Search employees..."
+             [(ngModel)]="searchTerm" (input)="onSearchChange()">
+    </div>
+
+    <!-- Mobile sidebar/profile dropdown -->
+    <div *ngIf="showSidebar && auth.isLoggedIn()" class="d-lg-none w-100 mt-2">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <span class="navbar-text text-white">{{ auth.getUsername().toUpperCase() }}</span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" (click)="auth.logout()" style="cursor: pointer;">Logout</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </nav>
 
 <router-outlet></router-outlet>

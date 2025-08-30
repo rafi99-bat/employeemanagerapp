@@ -119,3 +119,18 @@ input[list] {
   outline: none;
   color: #dc3545;
 }
+
+.btn-secondary {
+  background-color: #7a8186;
+  border-color: #7a8186;
+}
+
+.btn-secondary:hover {
+  background-color: #636669;
+  border-color: #636669;
+}
+
+.btn-dark:disabled {
+  background-color: #181818;
+  border-color: #181818;
+}

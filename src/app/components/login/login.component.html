@@ -1,4 +1,4 @@
-<section class="vh-100">
+<!-- <section class="vh-100">
   <div class="card-login">
     <h3>SIGN IN TO YOUR ACCOUNT</h3>
     <form (ngSubmit)="login()">
@@ -22,4 +22,58 @@
       <p>Not a member? <a class="register-text" routerLink="/register">Register</a></p>
     </div>
   </div>
+</section> -->
+
+<!-- Desktop: Card-based login -->
+<section class="vh-100 d-none d-md-flex align-items-center justify-content-center">
+  <div class="card-login">
+    <h3>SIGN IN TO YOUR ACCOUNT</h3>
+    <form (ngSubmit)="login()">
+      <div>
+        <input type="text" class="form-control" [(ngModel)]="username" name="username" placeholder="Username" required />
+      </div>
+
+      <div>
+        <input type="password" class="form-control" [(ngModel)]="password" name="password" placeholder="Password" required />
+      </div>
+      
+      <div *ngIf="credFailed" class="text-danger">
+        {{loginError}}
+      </div>
+
+      <button type="submit" class="btn btn-dark btn-login">SIGN IN</button>
+    </form>
+    <div class="register-link mt-3">
+      <p>Not a member? <a class="register-text" routerLink="/register">Register</a></p>
+    </div>
+  </div>
 </section>
+
+<!-- Mobile: Registration-style login -->
+<div class="container mt-5 d-block d-md-none">
+  <form (ngSubmit)="login()" class="p-4 shadow-sm rounded bg-white">
+    <div class="text mb-4">
+      <h1>Sign In</h1>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="username">Username</label>
+      <input id="username" type="text" class="form-control" [(ngModel)]="username" name="username" required>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="password">Password</label>
+      <input id="password" type="password" class="form-control" [(ngModel)]="password" name="password" required>
+    </div>
+
+    <div *ngIf="credFailed" class="text-danger mb-3">
+      {{loginError}}
+    </div>
+
+    <button type="submit" class="btn btn-dark w-100">Sign In</button>
+
+    <div class="mt-3 text-center">
+      <p>Not a member? <a class="register-text" routerLink="/register">Register</a></p>
+    </div>
+  </form>
+</div>

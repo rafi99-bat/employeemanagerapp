@@ -124,7 +124,7 @@
               <label for="religion">Religion</label>
               <input maxlength="100" list="religionList" id="religion" [ngModel]="selectedEmployee.religion?.name"
                 (ngModelChange)="onReligionChange($event)" name="religion" class="form-control"
-                pattern="^(?!\s)(?!.*\s{2,})(?!\s*$)[A-Za-z0-9.,' -]+$" #religion="ngModel" />
+                pattern="^(?!\s)(?!.*\s{2,})(?!\s*$)[A-Za-z0-9.,' \-]+$" #religion="ngModel" />
               <datalist id="religionList">
                 <option *ngFor="let r of religions" [value]="r.name"></option>
               </datalist>

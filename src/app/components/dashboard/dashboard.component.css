@@ -6,57 +6,74 @@
 
 .auto-expand {
   overflow: hidden;
-  resize: none; /* prevent manual resize if you want only auto */
-  height: 38px; /* initial height */
-  max-height: 200px; /* optional limit */
+  resize: none;
+  /* prevent manual resize if you want only auto */
+  height: 38px;
+  /* initial height */
+  max-height: 200px;
+  /* optional limit */
 }
 
 /* 1. Vertical gap between cards */
 .card {
-  margin-bottom: 1rem; /* For Bootstrap 4 */
+  margin-bottom: 1rem;
+  /* For Bootstrap 4 */
 }
 
 /* 2. Fixed card size for admin */
 .employee-card-admin {
-  min-height: 380px; /* Adjust depending on design */
+  min-height: 380px;
+  /* Adjust depending on design */
   max-height: 380px;
   overflow: hidden;
 }
 
 /* Ensure consistent width */
 .employee-card-admin {
-  width: 100%; /* responsive width */
-  max-width: 300px; /* fixed width for consistency */
-  margin: auto; /* center in column */
+  width: 100%;
+  /* responsive width */
+  max-width: 300px;
+  /* fixed width for consistency */
+  margin: auto;
+  /* center in column */
 }
 
 /* 2. Fixed card size for user */
 .employee-card-user {
-  min-height: 300px; /* Adjust depending on design */
+  min-height: 300px;
+  /* Adjust depending on design */
   max-height: 300px;
   overflow: hidden;
 }
 
 /* Ensure consistent width */
 .employee-card-user {
-  width: 100%; /* responsive width */
-  max-width: 300px; /* fixed width for consistency */
-  margin: auto; /* center in column */
+  width: 100%;
+  /* responsive width */
+  max-width: 300px;
+  /* fixed width for consistency */
+  margin: auto;
+  /* center in column */
 }
 
 /* Ellipsis for long text */
 .employee-name {
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Fallback for WebKit/Chromium */
+  -webkit-line-clamp: 2;
+  /* Fallback for WebKit/Chromium */
   -webkit-box-orient: vertical;
 
-  line-clamp: 2; /* Standard property */
-  box-orient: vertical; /* Standard property partner */
+  line-clamp: 2;
+  /* Standard property */
+  box-orient: vertical;
+  /* Standard property partner */
 
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: normal; /* Allow wrapping */
-  max-height: 3rem; /* Approx 2 lines, tweak if needed */
+  white-space: normal;
+  /* Allow wrapping */
+  max-height: 3rem;
+  /* Approx 2 lines, tweak if needed */
 }
 
 .text-truncate {
@@ -67,12 +84,26 @@
 
 /* Only applies to employee details modal */
 .employee-details-modal .modal-dialog {
-  max-width: 600px; /* fixed larger width */
+  max-width: 600px;
+  /* fixed larger width */
 }
 
 .employee-details-modal .modal-body {
   max-height: 600px;
   overflow-y: auto;
+}
+
+/* Hide the dropdown arrow in Chrome, Edge, Brave, Opera */
+input[list]::-webkit-calendar-picker-indicator {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+input[list] {
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .modal .close-btn {

@@ -40,6 +40,8 @@ export class DashboardComponent {
   modalMode: 'add' | 'edit' | 'delete' | 'view' = 'view';
   filteredReligions: any[] = [];
   selectedFile?: File;
+  imageFlag: number = 0;
+  imageError: string | null = null;
   private modalRef?: bootstrap.Modal;
 
   constructor(private empService: EmployeeService, private auth: AuthService, private searchService: SearchService, private religionService: ReligionService) { }
@@ -113,9 +115,51 @@ export class DashboardComponent {
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
+    if (!file) return;
+
+    const maxSizeKB = 50;
+    const desiredWidth = 300;
+    const desiredHeight = 300;
+    const maxFileNameLength = 100;
+    const fileNamePattern = /^[a-zA-Z0-9._-]+$/; // only safe characters
+
+    // ✅ Check file name length
+    if (file.name.length > maxFileNameLength) {
+      this.imageError = `File name should not exceed ${maxFileNameLength} characters.`;
+      this.selectedFile = undefined;
+      return;
     }
+
+    // ✅ Check file name characters
+    if (!fileNamePattern.test(file.name)) {
+      this.imageError = `File name can only contain letters, numbers, '.', '-', and '_'.`;
+      this.selectedFile = undefined;
+      return;
+    }
+
+    // ✅ Check file size
+    if (file.size / 1024 > maxSizeKB) {
+      this.imageError = `File size should be under ${maxSizeKB}KB.`;
+      this.selectedFile = undefined;
+      return;
+    }
+
+    // ✅ Check resolution
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      const img = new Image();
+      img.onload = () => {
+        if (img.width !== desiredWidth || img.height !== desiredHeight) {
+          this.imageError = `Image resolution must be ${desiredWidth}x${desiredHeight}px.`;
+          this.selectedFile = undefined;
+        } else {
+          this.imageError = null;
+          this.selectedFile = file; // ✅ Valid image
+        }
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
   }
 
   onSaveEmployee() {

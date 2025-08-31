@@ -12,9 +12,10 @@
       <div class="card h-100" [ngClass]="role === 'ROLE_ADMIN' ? 'employee-card-admin' : 'employee-card-user'">
         <div class="card-body row">
           <div class="col-6">
-            <a (click)="onOpenModal(employee, 'view')"><img
+            <a (click)="onOpenModal(employee, 'view')">
+              <img
                 [src]="employee?.imageUrl ? 'http://localhost:8080' + employee.imageUrl : 'https://i.postimg.cc/7h8KFcX5/default.jpg'"
-                alt="" class="img-fluid rounded-circle w-60">
+                (error)="onImageError($event)" alt="" class="img-fluid rounded-circle w-60">
             </a>
           </div>
           <div class="col-6 card-title align-self-center mb-0">
@@ -63,7 +64,7 @@
         <div class="modal-body">
           <img
             [src]="selectedEmployee.imageUrl ? 'http://localhost:8080' + selectedEmployee.imageUrl : 'https://i.postimg.cc/7h8KFcX5/default.jpg'"
-            class="img-fluid rounded-circle mb-3" alt="">
+            (error)="onImageError($event)" class="img-fluid rounded-circle mb-3" alt="">
           <p><strong>Job Title:</strong> {{selectedEmployee.jobTitle}}</p>
           <p><strong>Email:</strong> {{selectedEmployee.email}}</p>
           <p><strong>Phone:</strong> {{selectedEmployee.phone}}</p>
@@ -134,16 +135,16 @@
             <div *ngIf="modalMode === 'edit'" class="form-group">
               <label for="imageFile">Profile Image</label>
               <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*">
-              <small class="text-muted">Only 300x300 images under 50KB allowed. File name should be valid and under 100 characters</small>
+              <small class="text-muted">Only 300x300 images under 50KB allowed. File name should be valid and under 100
+                characters</small>
               <div *ngIf="imageError" class="text-danger mt-1">{{ imageError }}</div>
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button
-              [disabled]="!selectedEmployee.name || !selectedEmployee.email || !selectedEmployee.jobTitle || !selectedEmployee.phone || !selectedEmployee.religion?.name || imageError
-              || name.invalid || email.invalid || jobTitle.invalid || phone.invalid || religion.invalid"
-              type="submit" class="btn btn-dark">
+            <button [disabled]="!selectedEmployee.name || !selectedEmployee.email || !selectedEmployee.jobTitle || !selectedEmployee.phone || !selectedEmployee.religion?.name || imageError
+              || name.invalid || email.invalid || jobTitle.invalid || phone.invalid || religion.invalid" type="submit"
+              class="btn btn-dark">
               {{modalMode === 'add' ? 'Add' : 'Save Changes'}}
             </button>
           </div>

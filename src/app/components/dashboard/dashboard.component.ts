@@ -200,6 +200,10 @@ export class DashboardComponent {
     }
   }
 
+  onImageError(event: Event) {
+    (event.target as HTMLImageElement).src = 'https://i.postimg.cc/7h8KFcX5/default.jpg';
+  }
+
   deleteEmployee(id: number) {
     if (this.role === 'ROLE_ADMIN') {
       this.empService.deleteEmployee(id).subscribe(() => this.loadEmployees());

@@ -30,8 +30,8 @@
           <li class="list-group-item text-truncate">
             <i class="fa fa-phone float-right"></i>Phone : {{employee?.phone}}
           </li>
-          <li class="list-group-item text-truncate">
-            <i class="fa fa-star float-right"></i>Religion : {{employee?.religion?.name}}
+          <li class="list-group-item text-truncate" *ngIf="employee?.religion">
+            <i class="fa fa-star float-right"></i>Religion : {{employee.religion?.name}}
           </li>
         </ul>
         <div class="card-body" *ngIf="role === 'ROLE_ADMIN'">
@@ -81,8 +81,8 @@
       <div class="modal-content">
         <form (ngSubmit)="onSaveEmployee()" onkeydown="return event.key != 'Enter';">
           <div class="modal-header">
-            <h5 class="modal-title" id="employeeModalLabel">{{modalMode === 'add' ? 'Add Employee' : 'Edit Employee'}}
-            </h5>
+            <h5 class="modal-title" id="employeeModalLabel" *ngIf="modalMode === 'add'">Add Employee</h5>
+            <h5 class="modal-title" id="employeeModalLabel" *ngIf="modalMode === 'edit'">Edit Employee</h5>
             <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close">
               <i class="fa fa-times"></i>
             </button>
@@ -142,9 +142,10 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button [disabled]="!selectedEmployee.name || !selectedEmployee.email || !selectedEmployee.jobTitle || !selectedEmployee.phone || !selectedEmployee.religion?.name || imageError
-              || name.invalid || email.invalid || jobTitle.invalid || phone.invalid || religion.invalid" type="submit"
-              class="btn btn-dark">
+            <button [disabled]="!selectedEmployee.name || !selectedEmployee.email || !selectedEmployee.jobTitle 
+              || !selectedEmployee.phone || !selectedEmployee.religion?.name || imageError
+              || name.invalid || email.invalid || jobTitle.invalid || phone.invalid || religion.invalid"
+              type="submit" class="btn btn-dark">
               {{modalMode === 'add' ? 'Add' : 'Save Changes'}}
             </button>
           </div>
